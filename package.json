@@ -1,7 +1,7 @@
 {
   "name": "shelf-life",
   "version": "1.0.0",
-  "description": "",
+  "description": "Shelf Life is a dynamic web application where users can discover books and share their reviews. It will be built with a distinct front end, a back end handling business logic, and a database to store user and review data. There will be 2 user experiences based on whether they are logged in or a guest.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,8 +11,18 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "mysql2": "^3.14.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tkakar0451/shelf-life.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tkakar0451/shelf-life/issues"
+  },
+  "homepage": "https://github.com/tkakar0451/shelf-life#readme"
 }
