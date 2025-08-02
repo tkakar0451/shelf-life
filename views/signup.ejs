@@ -6,6 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <form action="/signup" method="POST">
+        Username:
+        <input type="text" name="username"> <br>
+
+        Password:
+        <input type="password" name="password"> <br>
+
+        <% if (warning) { %>
+            <div name="alert"><%= warning %></div>
+        <% } %>
+        <button>Login</button>
+    </form>
 </body>
 </html>

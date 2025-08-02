@@ -1,7 +1,9 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
+import bcrypt from 'bcrypt';
 
 const app = express();
+const saltRounds = 10;
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -31,7 +33,26 @@ app.get('/', (req, res) => {
 
 // route to go to signup page
 app.get('/signup', (req, res) => {
-    res.render('signup');
+    res.render('signup', { warning: null });
+});
+
+app.post('/signup', async(req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
+
+    // TODO: check in databse if there is similar username
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
+        // Store username and hashedPassword in database
+
+        // Go to main page (or MyProfile page)
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error hashing password:', error);
+        res.status(500).send('Signup failed');
+    }
 });
 
 // route to login page
