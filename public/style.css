@@ -1,0 +1,53 @@
+
+
+/*
+    For Star Rating in Add Review
+    Code by andrew-demchenk0 (and then modified)
+ */
+
+.rating{
+    position: relative;
+    width: 10%;
+    height: 10%;
+
+    display: flex;
+    flex-direction: row;
+    background-color: transparent;
+
+    text-align: center;
+    align-items: center;
+}
+.starRating {
+    position: relative;
+    width: 50%;
+
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.starRating:not(:checked) > input {
+  position: absolute;
+  appearance: none;
+}
+
+.starRating:not(:checked) > label {
+  cursor: pointer;
+  font-size: 20px;
+  color: #666;
+  display: inline-block;
+}
+
+.starRating:not(:checked) > label:before {
+  content: '★';
+}
+
+.starRating:not(:checked) > label:hover,
+.starRating:not(:checked) > label:hover ~ label {
+  color: #ff9e0b;
+}
+
+.starRating > input:checked ~ label {
+  color: #ffa723;
+}
+
+/* ------------------------------------- */

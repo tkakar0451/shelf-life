@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
     <title>Document</title>
 </head>
 <body>
-    <form action="/login" method="POST">
-        Username:
-        <input type="text" name="username"> <br>
+    <div class="center_container">
+        <h1>Log In</h1>
+        <form action="/login" method="POST">
+            Username:
+            <input type="text" name="username"> <br>
 
-        Password:
-        <input type="password" name="password"> <br>
+            Password:
+            <input type="password" name="password"> <br>
 
-        <% if (warning) { %>
-            <div name="alert"><%= warning %></div>
-        <% } %>
-        <button>Login</button>
-    </form>
+            <% if (warning) { %>
+                <div name="alert"><%= warning %></div>
+            <% } %>
+            <button>Login</button>
+        </form>
+    </div>
+    
 </body>
 </html>

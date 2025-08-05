@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="center_container">
+        <h1>Add New Review</h1>
+        <form action="/addReview" method="POST">
+            <div>
+                Book (dropdown menu with pre-selected book):
+                <!-- Add a dropdown menu that contains all books  --> <br>
+                
+                <div class="rating">
+                    Rating:
+                    <div class="starRating">
+                        <input type="radio" id="star1" name="rating" value="1"><label for="star1"></label>
+                        <input type="radio" id="star2" name="rating" value="2"><label for="star2"></label>
+                        <input type="radio" id="star3" name="rating" value="3"><label for="star3"></label>
+                        <input type="radio" id="star4" name="rating" value="4"><label for="star4"></label>
+                        <input type="radio" id="star5" name="rating" value="5"><label for="star5"></label>
+                </div>
+                </div>
+            </div>
+
+            <div>
+                Review: <br>
+                    <textarea id="reviewField" cols="50" rows="5"></textarea><br>
+                Spoiler:
+                    <input type="checkbox" id="spoilerCheckbox" name="spoilerCheckbox" value="isSpoiled">
+            </div>
+
+            <% if (warning) { %>
+                <div name="alert"><%= warning %></div>
+            <% } %>
+            <button>Sign Up</button>
+        </form>
+    </div>    
+</body>
+</html>

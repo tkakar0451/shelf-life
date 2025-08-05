@@ -1,6 +1,7 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
+import session from 'express-session';
 
 const app = express();
 const saltRounds = 10;
@@ -10,6 +11,13 @@ app.use(express.static('public'));
 
 //for Express to get values using POST method
 app.use(express.urlencoded({ extended: true }));
+
+app.set('trust proxy', 1); 
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true
+}))
 
 // setting up database connection pool
 const pool = mysql.createPool({
@@ -33,14 +41,16 @@ app.get('/', (req, res) => {
 
 // route to go to signup page
 app.get('/signup', (req, res) => {
-    res.render('signup', { warning: null });
+    res.render('signup', { warning: null,
+                        logIn: req.session.authenticated,
+     });
 });
 
 app.post('/signup', async(req, res) => {
     let username = req.body.username;
     let password = req.body.password;
 
-    // TODO: check in databse if there is similar username
+    // TODO: check in database if there is similar username
 
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -57,7 +67,14 @@ app.post('/signup', async(req, res) => {
 
 // route to login page
 app.get('/login', (req, res) =>{
-    res.render('login', { warning: null });
+    // if user is not login
+    if(!req.session.authenticated){
+        res.render('login', { warning: null,
+                            logIn: req.session.authenticated,
+        });
+    } else{
+        // if login, redirect to MyProfile page
+    }
 });
 
 app.post('/login', async(req, res) =>{
@@ -99,6 +116,27 @@ function isAuthenticated(req, res, next){
         next();
     }
 }
+
+//---------------------------------------------
+
+/*
+    Routes for Review
+*/
+app.get('/addReview', async(req, res)=>{
+    // TODO: get the whole list of books in database to display
+
+    res.render('addReview', { logIn: req.session.authenticated,
+                            warning: null,
+    });
+});
+
+app.post('/addReview', (req, res)=>{
+    // TODO: check review before adding to database
+
+    res.render('addReview', { logIn: req.session.authenticated,
+                            warning: null,
+    });
+});
 
 //---------------------------------------------
 
