@@ -4,12 +4,9 @@
   Description: Clean, warm, and welcoming styles for book discovery.
 */
 
-/* ==========================
-   Global Theme & Resets
-========================== */
-
+/* ========== COLOR VARIABLES ========== */
 :root {
-  --cream: #f9f1e7;
+  --cream: #fdf5ee;
   --dark-brown: #7d4f37;
   --light-brown: #a66a4c;
   --accent-pink: #e9afa3;
@@ -17,6 +14,7 @@
   --card-shadow: rgba(0, 0, 0, 0.08);
 }
 
+/* ========== BASE RESET ========== */
 * {
   margin: 0;
   padding: 0;
@@ -31,10 +29,7 @@ body {
   padding-bottom: 4rem;
 }
 
-/* ==========================
-   Header
-========================== */
-
+/* ========== HEADER ========== */
 header {
   background-color: var(--dark-brown);
   color: white;
@@ -65,14 +60,10 @@ header {
   text-decoration: underline;
 }
 
-/* ==========================
-   Hero / Banner
-========================== */
-
+/* ========== HERO SECTION ========== */
 .hero-banner {
   text-align: center;
   padding: 2rem 1rem;
-  background-color: var(--cream);
 }
 
 .hero-image {
@@ -83,45 +74,46 @@ header {
   border-radius: 12px;
 }
 
-/* ==========================
-   Search Form
-========================== */
-
-#searchForm {
+/* ========== SEARCH BAR ========== */
+.search-container {
   display: flex;
   justify-content: center;
-  margin: 2rem auto 1.5rem;
+  margin: 2rem 0;
   gap: 10px;
 }
 
-#searchQuery {
+.search-input {
   padding: 0.7rem 1.2rem;
   border: 2px solid var(--light-brown);
-  border-radius: 50px;
+  border-radius: 25px;
   font-size: 1rem;
+  background-color: #fff8f1;
+  color: #4b3a2c;
   width: 300px;
   outline: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-#searchBtn {
-  padding: 0.7rem 1.5rem;
+.search-input::placeholder {
+  color: #c2a186;
+}
+
+.search-button {
+  padding: 0.7rem 1.4rem;
   background-color: var(--light-brown);
   color: white;
   border: none;
-  border-radius: 50px;
-  font-weight: bold;
+  border-radius: 25px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s ease;
 }
 
-#searchBtn:hover {
+.search-button:hover {
   background-color: var(--dark-brown);
 }
 
-/* ==========================
-   Book Results Grid
-========================== */
-
+/* ========== BOOK GRID ========== */
 .results-container {
   display: flex;
   flex-wrap: wrap;
@@ -139,7 +131,6 @@ header {
   display: flex;
   flex-direction: column;
   transition: transform 0.2s;
-  overflow: hidden;
 }
 
 .card:hover {
@@ -150,8 +141,8 @@ header {
   width: 100%;
   height: 280px;
   object-fit: contain;
-  background-color: #fff;
   image-rendering: auto;
+  background-color: #fff;
 }
 
 .card-title {
@@ -185,20 +176,127 @@ header {
   color: white;
 }
 
-/* ==========================
-   Footer 
-========================== */
+/* ========== FOOTER ========== */
 footer {
-  background-color: #f3e7db; /* matches Canva beige tone */
+  background-color: #f3e7db;
   color: #7d4f37;
   text-align: center;
   padding: 2rem 1rem;
   font-size: 0.95rem;
   border-top: 1px solid #e4d5c5;
   margin-top: 3rem;
-  font-family: 'Baloo 2', sans-serif;
 }
 
 footer p {
   margin: 0.3rem 0;
+}
+
+/* ========== FORMS (Login, Signup) ========== */
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff8f1;
+  min-height: 80vh;
+}
+
+.form-container {
+  background-color: #fff;
+  border: 2px solid #a47148;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: #4b3a2c;
+}
+
+.form-container h2 {
+  text-align: center;
+  color: #a47148;
+  font-size: 1.8rem;
+}
+
+.form-container p {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-container label {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+  font-weight: bold;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1.5px solid #c2a186;
+  border-radius: 10px;
+  background-color: #fff8f1;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background-color: #a47148;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #8b5e3c;
+}
+
+.signup-redirect {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.signup-redirect a {
+  color: #a47148;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.signup-redirect a:hover {
+  text-decoration: underline;
+}
+
+/* ========== STAR RATING ========== */
+.star-rating {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #ffb347;
+  display: flex;
+  justify-content: center;
+}
+
+/* ========== UPDATED CARD STYLE FOR GRID LAYOUT ========== */
+.card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px var(--card-shadow);
+  width: 220px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.card img {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
 }

@@ -19,12 +19,12 @@
 </head>
 
 <body>
-  <!-- Top nav bar -->
+  <!-- Navigation bar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Shelf Life</a>
 
-      <!-- Conditionally render nav links -->
+      <!-- Conditionally show links based on login state -->
       <% if (isLoggedIn) { %>
         <a class="nav-link text-white" href="/profile">My Profile</a>
         <a class="nav-link text-white" href="/logout">Logout</a>
@@ -35,26 +35,27 @@
     </div>
   </nav>
 
-  <!-- Book details section -->
+  <!-- Main book detail section -->
   <div class="container mt-4">
     <div class="row">
-      <!-- Book cover image -->
+      <!-- Book cover on the left -->
       <div class="col-md-4">
         <img src="<%= book.image %>" alt="Book Cover" class="img-fluid shadow">
       </div>
 
-      <!-- Book metadata -->
+      <!-- Book info on the right -->
       <div class="col-md-8">
         <h2><%= book.title %></h2>
         <h5 class="text-muted">By <%= book.author %></h5>
         <p><%= book.description %></p>
 
-        <!-- Add Review button (with login check) -->
+        <!-- Button to add a review (only if logged in) -->
         <% if (isLoggedIn) { %>
           <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addReviewModal">
             Add Review
           </button>
         <% } else { %>
+          <!-- Show login prompt if not logged in -->
           <button class="btn btn-outline-secondary mt-3" data-bs-toggle="modal" data-bs-target="#loginPromptModal">
             Add Review (Login Required)
           </button>
@@ -62,26 +63,26 @@
       </div>
     </div>
 
-    <!-- Review section -->
+    <!-- User reviews section -->
     <div class="mt-5">
       <h4>User Reviews</h4>
 
-      <!-- If there are no reviews yet -->
+      <!-- If no reviews exist yet -->
       <% if (reviews.length === 0) { %>
         <p class="text-muted">No reviews yet. Be the first to leave one!</p>
       <% } else { %>
-        <!-- Loop through each review -->
+        <!-- Loop through reviews and display each -->
         <% reviews.forEach(review => { %>
           <div class="card mb-3">
             <div class="card-body">
               <p><strong><%= review.username %></strong> rated it <%= review.rating %>/5</p>
 
-              <!-- Show spoiler warning if applicable -->
+              <!-- Show a spoiler badge if applicable -->
               <% if (review.containsSpoilers) { %>
                 <span class="badge bg-warning text-dark">Spoiler</span>
               <% } %>
 
-              <!-- Review content -->
+              <!-- Review text -->
               <p class="mt-2"><%= review.reviewText %></p>
             </div>
           </div>
@@ -90,10 +91,10 @@
     </div>
   </div>
 
-  <!-- Include the Add Review modal (coded by Yui) -->
+  <!-- Modal for adding a new review (defined in a separate partial) -->
   <%- include('partials/addReview') %>
 
-  <!-- Modal for users who aren't logged in -->
+  <!-- Modal prompting user to log in -->
   <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -112,7 +113,7 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS bundle for modal support -->
+  <!-- Bootstrap JS for modal functionality -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

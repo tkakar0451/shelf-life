@@ -1,19 +1,57 @@
-<%- include ("partials/head") %>
+<!-- 
+  File: views/signup.ejs
+  Author: Yusra Ashar
+  Description: Signup page for new Shelf Life users
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup | Shelf Life</title>
+
+  <!-- Link to custom CSS file -->
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- Google Font for styling -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+</head>
+
 <body>
-    <div class="center_container">
-        <h1>Sign Up</h1>
-        <form action="/signup" method="POST">
-            Username:
-            <input type="text" name="username"> <br>
+  <!-- Include reusable header partial -->
+  <%- include("partials/header") %>
 
-            Password:
-            <input type="password" name="password"> <br>
+  <!-- Wrapper for the form layout -->
+  <div class="form-wrapper">
 
-            <% if (warning) { %>
-                <div name="alert"><%= warning %></div>
-            <% } %>
-            <button>Sign Up</button>
-        </form>
-    </div>    
+    <!-- Signup form to collect user data -->
+    <form class="form-container" action="/signup" method="POST">
+      <h2>Create Your Account</h2>
+      <p>Join Shelf Life and start discovering books you love!</p>
+
+      <!-- Full Name field -->
+      <label for="name">Full Name</label>
+      <input type="text" name="name" id="name" required>
+
+      <!-- Email field -->
+      <label for="email">Email Address</label>
+      <input type="email" name="email" id="email" required>
+
+      <!-- Password field -->
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-primary">Sign Up</button>
+
+      <!-- Redirect link for users who already have an account -->
+      <div class="signup-redirect">
+        Already have an account? <a href="/login">Log in</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Include reusable footer partial -->
+  <%- include("partials/footer") %>
 </body>
 </html>

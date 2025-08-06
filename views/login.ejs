@@ -1,20 +1,39 @@
-<%- include ("partials/head") %>
-<body>
-    <div class="center_container">
-        <h1>Log In</h1>
-        <form action="/login" method="POST">
-            Username:
-            <input type="text" name="username"> <br>
+<!-- 
+  File: views/login.ejs
+  Author: Yusra Ashar
+  Description: Login page for existing Shelf Life users
+-->
 
-            Password:
-            <input type="password" name="password"> <br>
+<!-- Include the shared header partial (navigation, logo, etc.) -->
+<%- include('partials/header') %>
 
-            <% if (warning) { %>
-                <div name="alert"><%= warning %></div>
-            <% } %>
-            <button>Login</button>
-        </form>
-    </div>
-    
-</body>
-</html>
+<!-- Wrapper for styling and layout -->
+<div class="form-wrapper">
+  <div class="form-container">
+
+    <!-- Login heading and message -->
+    <h2>Welcome Back</h2>
+    <p>Please login to continue your Shelf Life journey 📚</p>
+
+    <!-- Login form -->
+    <form action="/login" method="POST">
+      <!-- Username input field -->
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+
+      <!-- Password input field -->
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-primary">Login</button>
+    </form>
+
+    <!-- Redirect for users who need to sign up -->
+    <p class="signup-redirect">Don't have an account? <a href="/signup">Sign up here</a></p>
+
+  </div>
+</div>
+
+<!-- Include the shared footer partial (credits, footer links, etc.) -->
+<%- include('partials/footer') %>
