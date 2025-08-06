@@ -3,7 +3,6 @@ import mysql from 'mysql2/promise';
 import session from 'express-session';
 
 const app = express();
-const saltRounds = 10;
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
