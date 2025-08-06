@@ -1,0 +1,118 @@
+<!-- 
+  File: views/book-details.ejs
+  Author: Yusra Ashar
+  Description: Displays detailed information about a selected book
+               including title, author, description, and cover image.
+               Also shows existing user reviews and a button to add a new review.
+               Includes conditional rendering for login state and modal triggers.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= book.title %> - Shelf Life</title>
+
+  <!-- Custom CSS and Bootstrap -->
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+  <!-- Top nav bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Shelf Life</a>
+
+      <!-- Conditionally render nav links -->
+      <% if (isLoggedIn) { %>
+        <a class="nav-link text-white" href="/profile">My Profile</a>
+        <a class="nav-link text-white" href="/logout">Logout</a>
+      <% } else { %>
+        <a class="nav-link text-white" href="/login">Login</a>
+        <a class="nav-link text-white" href="/signup">Signup</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- Book details section -->
+  <div class="container mt-4">
+    <div class="row">
+      <!-- Book cover image -->
+      <div class="col-md-4">
+        <img src="<%= book.image %>" alt="Book Cover" class="img-fluid shadow">
+      </div>
+
+      <!-- Book metadata -->
+      <div class="col-md-8">
+        <h2><%= book.title %></h2>
+        <h5 class="text-muted">By <%= book.author %></h5>
+        <p><%= book.description %></p>
+
+        <!-- Add Review button (with login check) -->
+        <% if (isLoggedIn) { %>
+          <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addReviewModal">
+            Add Review
+          </button>
+        <% } else { %>
+          <button class="btn btn-outline-secondary mt-3" data-bs-toggle="modal" data-bs-target="#loginPromptModal">
+            Add Review (Login Required)
+          </button>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Review section -->
+    <div class="mt-5">
+      <h4>User Reviews</h4>
+
+      <!-- If there are no reviews yet -->
+      <% if (reviews.length === 0) { %>
+        <p class="text-muted">No reviews yet. Be the first to leave one!</p>
+      <% } else { %>
+        <!-- Loop through each review -->
+        <% reviews.forEach(review => { %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <p><strong><%= review.username %></strong> rated it <%= review.rating %>/5</p>
+
+              <!-- Show spoiler warning if applicable -->
+              <% if (review.containsSpoilers) { %>
+                <span class="badge bg-warning text-dark">Spoiler</span>
+              <% } %>
+
+              <!-- Review content -->
+              <p class="mt-2"><%= review.reviewText %></p>
+            </div>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Include the Add Review modal (coded by Yui) -->
+  <%- include('partials/addReview') %>
+
+  <!-- Modal for users who aren't logged in -->
+  <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login Required</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          You must be logged in to add a review.
+        </div>
+        <div class="modal-footer">
+          <a href="/login" class="btn btn-primary">Login</a>
+          <a href="/signup" class="btn btn-secondary">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS bundle for modal support -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
