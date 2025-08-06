@@ -1,6 +1,5 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
-import bcrypt from 'bcrypt';
 import session from 'express-session';
 
 const app = express();
@@ -47,22 +46,37 @@ app.get('/signup', (req, res) => {
 });
 
 app.post('/signup', async(req, res) => {
-    let username = req.body.username;
-    let password = req.body.password;
+    let inputUsername = req.body.username;
+    let inputPassword = req.body.password;
 
-    // TODO: check in database if there is similar username
-
-    try {
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        
-        // Store username and hashedPassword in database
-
-        // Go to main page (or MyProfile page)
-        res.redirect('/');
-    } catch (error) {
-        console.error('Error hashing password:', error);
-        res.status(500).send('Signup failed');
+    // check for input
+    if(inputUsername.trim().length == 0){
+        return res.render('signup', { warning: "Username cannot be empty.",
+                        logIn: req.session.authenticated,
+        });
     }
+    if (inputPassword.trim().length == 0){
+        return res.render('signup', { warning: "Password is not valid.",
+                        logIn: req.session.authenticated,
+        });
+    }
+
+    // Check in database if there is similar username
+    let sql = `SELECT username
+                FROM Users
+                WHERE username = ?`;    
+    
+    const [rows] = await conn.query(sql, [inputUsername]);
+    
+    if(rows.length > 0){
+        return res.render('signup', { warning: "Username already exists.",
+                        logIn: req.session.authenticated,
+        });
+    }
+
+    // Go to main page (or MyProfile page)
+    req.session.authenticated = true;
+    return res.redirect('/');
 });
 
 // route to login page
@@ -78,27 +92,22 @@ app.get('/login', (req, res) =>{
 });
 
 app.post('/login', async(req, res) =>{
-    let username = req.body.username;
-    let password = req.body.password;
-    let passwordHash = '';
+    let inputUsername = req.body.username;
+    let inputPassword = req.body.password;
     
-    /*let sql = ``;
-    const [rows] = await conn.query(sql, [username]);
-    
-     if(rows.length > 0){
-        passwordHash = rows[0].password;
-    }
-    
-    const match = await bcrypt.compare(password, passwordHash);*/
+    let sql = `SELECT username, password
+                FROM Users
+                WHERE username = ? AND password = ?`;
+                
+    const [rows] = await conn.query(sql, [inputUsername, inputPassword]);
     
     // return to main page after logging in
     // if not correct, stay at login page and stage the error
-    // NOTE: this is temporary to test the validation
-    if(username == "admin" && password == "123"){
-        res.session.authenticated = true;
-        res.redirect('/');
+    if(rows.length > 0){
+        req.session.authenticated = true;
+        return res.redirect('/');
     } else{
-        res.render('login', { warning: 'Invalid username or password.' });
+        return res.render('login', { warning: 'Invalid username or password.' });
     }
 });
 
