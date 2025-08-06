@@ -1,3 +1,11 @@
+/*
+  File: public/search.js
+  Author: Yusra Ashar
+  Description: Handles the fetch request to the Google Books API
+               when the user searches for a book on the home page.
+               Dynamically renders book cards in the search results area.
+*/
+
 // Waits for the form to be submitted
 document.getElementById("searchForm").addEventListener("submit", async (e) => {
     e.preventDefault(); // Prevents page refresh
