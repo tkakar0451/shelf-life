@@ -29,9 +29,9 @@ const pool = mysql.createPool({
 const conn = await pool.getConnection();
 
 //routes
-app.get('/', (req, res) => {
-    res.send('Hello Express app!');
-});
+app.get("/", (req, res) => {
+    res.render("index", { isLoggedIn: false }); // or true for testing
+  });
 
 /*
     Routes for Signup and Login
