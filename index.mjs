@@ -16,7 +16,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
-app.use(convertAuthenticated);
 
 // setting up database connection pool
 const pool = mysql.createPool({
