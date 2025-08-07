@@ -25,7 +25,7 @@
       <a class="navbar-brand" href="/">Shelf Life</a>
 
       <!-- Conditionally show links based on login state -->
-      <% if (isLoggedIn) { %>
+      <% if (logIn) { %>
         <a class="nav-link text-white" href="/profile">My Profile</a>
         <a class="nav-link text-white" href="/logout">Logout</a>
       <% } else { %>
@@ -50,7 +50,7 @@
         <p><%= book.description %></p>
 
         <!-- Button to add a review (only if logged in) -->
-        <% if (isLoggedIn) { %>
+        <% if (logIn) { %>
           <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addReviewModal">
             Add Review
           </button>

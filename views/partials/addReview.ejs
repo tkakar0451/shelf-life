@@ -1,0 +1,51 @@
+<!-- Modal -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shelf Life</title>
+
+  <!-- Link to main custom stylesheet -->
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Review</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Book:
+            <!-- Add a textfield that contains the review book  --> <br>
+
+            <div class="rating">
+                Rating:
+                <div class="star-rating">
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1"></label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2"></label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3"></label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4"></label>
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5"></label>
+                </div>
+            </div>
+
+            <div>
+                Review: <br>
+                    <textarea id="reviewField" cols="50" rows="5"></textarea><br>
+                Spoiler:
+                    <input type="checkbox" id="spoilerCheckbox" name="spoilerCheckbox" value="isSpoiled">
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" >Add Review</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>      
+    </div>  
+</body>
+</html>

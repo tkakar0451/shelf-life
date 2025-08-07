@@ -32,7 +32,7 @@ const conn = await pool.getConnection();
 // NOTE: req.session.authenticated may be undefined (False) on the first visit
 
 app.get("/", (req, res) => {
-    res.render("index", { isLoggedIn: false }); // or true for testing
+    res.render("index", { logIn: req.session.authenticated });
   });
 
 /*
@@ -139,7 +139,7 @@ function isAuthenticated(req, res, next){
 app.get('/addReview', async(req, res)=>{
     // TODO: get the whole list of books in database to display
 
-    res.render('addReview', { logIn: req.session.authenticated,
+    res.render('tempReview', { logIn: req.session.authenticated,
                             warning: null,
     });
 });
@@ -147,9 +147,30 @@ app.get('/addReview', async(req, res)=>{
 app.post('/addReview', (req, res)=>{
     // TODO: check review before adding to database
 
-    res.render('addReview', { logIn: req.session.authenticated,
+    res.render('tempReview', { logIn: req.session.authenticated,
                             warning: null,
     });
+});
+
+//---------------------------------------------
+
+
+/*
+    Routes for Book Detail
+*/
+
+app.get('/books/:id', async(req, res)=>{
+    let bookID = req.params.id;
+    console.log(bookID);
+    let sql = `SELECT *
+            FROM Book
+            WHERE bookId = ?`;           
+    let [bookRows] = await conn.query(sql, [bookID]);
+    let reviewRows = [];
+    res.render('bookDetails', { logIn: req.session.authenticated,
+                                book: bookRows,
+                                reviews: reviewRows,
+    })
 });
 
 //---------------------------------------------
