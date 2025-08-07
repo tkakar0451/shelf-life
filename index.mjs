@@ -16,6 +16,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+app.use(convertAuthenticated);
 
 // setting up database connection pool
 const pool = mysql.createPool({
@@ -28,7 +29,9 @@ const pool = mysql.createPool({
 });
 const conn = await pool.getConnection();
 
-//routes
+// routes
+// NOTE: req.session.authenticated may be undefined (False) on the first visit
+
 app.get("/", (req, res) => {
     res.render("index", { isLoggedIn: false }); // or true for testing
   });
@@ -87,6 +90,10 @@ app.get('/login', (req, res) =>{
         });
     } else{
         // if login, redirect to MyProfile page
+        // temporary route back to main
+        res.render('index', { warning: null,
+                            logIn: req.session.authenticated,
+        });
     }
 });
 
