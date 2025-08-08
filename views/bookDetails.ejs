@@ -40,14 +40,14 @@
     <div class="row">
       <!-- Book cover on the left -->
       <div class="col-md-4">
-        <img src="<%= book.image %>" alt="Book Cover" class="img-fluid shadow">
+        <img src="<%= book.imageLinks.thumbnail %>" alt="Book Cover" class="img-fluid shadow">
       </div>
 
       <!-- Book info on the right -->
       <div class="col-md-8">
         <h2><%= book.title %></h2>
-        <h5 class="text-muted">By <%= book.author %></h5>
-        <p><%= book.description %></p>
+        <h5 class="text-muted">By <%= book.authors %></h5>
+        <p><%= book.description ? book.description : "No Description" %></p>
 
         <!-- Button to add a review (only if logged in) -->
         <% if (logIn) { %>
@@ -93,7 +93,7 @@
 
   <!-- Modal for adding a new review (defined in a separate partial) -->
   <%- include('partials/addReview') %>
-
+  
   <!-- Modal prompting user to log in -->
   <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel" aria-hidden="true">
     <div class="modal-dialog">

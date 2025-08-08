@@ -11,6 +11,6 @@ for(button of addReviewLinks){
 }
 
 async function addReviewWindow(){
-    var myModal = new bootstrap.Modal(document.getElementById('authorModal'));
+    var myModal = new bootstrap.Modal(document.getElementById('addReviewModal'));
     myModal.show();
 }

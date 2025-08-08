@@ -159,19 +159,18 @@ app.post('/addReview', (req, res)=>{
     Routes for Book Detail
 */
 
-app.get('/books/:id', async(req, res)=>{
-    let bookID = req.params.id;
-    console.log(bookID);
-    let sql = `SELECT *
-            FROM Book
-            WHERE bookId = ?`;           
-    let [bookRows] = await conn.query(sql, [bookID]);
-    let reviewRows = [];
-    res.render('bookDetails', { logIn: req.session.authenticated,
-                                book: bookRows,
-                                reviews: reviewRows,
-    })
-});
+    app.get('/books/:id', async(req, res)=>{
+        let bookID = req.params.id;
+        const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${bookID}`);
+        const data = await response.json();
+        
+        let reviewRows = [];
+        let bookDetail = data.volumeInfo;
+        return res.render('bookDetails', { logIn: req.session.authenticated,
+                                        book: bookDetail,
+                                        reviews: reviewRows,                                     
+        })    
+    });
 
 //---------------------------------------------
 
