@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Review</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <style>
+        body {
+            width: 100%;
+        }
+
+        .reviewBlocks {
+            
+            border: 2px black solid;
+            min-height: 100px;
+            width: 75%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .editButtons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70%;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <main>
+        <div id="wrapper">
+            <h1><%=reviews[0].username%>'s Reviews</h1>
+            <% for (i of reviews) { %>
+                
+                <div class="reviewBlocks">
+                    <div>
+                        <% if (i.bookInfo?.thumbnail) { %>
+                            <img src="<%= i.bookInfo.thumbnail %>" alt="Book cover">
+                        <% } %>
+                    </div>
+                    <div>
+                        <h2><strong></strong><%= i.username %> </strong></h2>
+                        <div class="title">
+                            <h3><%= i.title%></h3>
+                        </div>
+
+                        <% if (i.bookInfo?.authors) { %>
+                            <div class="authors">
+                                <h3><strong>Author(s):</strong> <%= i.bookInfo.authors.join(", ") %></h3>
+                            </div>
+                        <% } %>
+
+                        <div class="reviewP">
+                            <%= i.reviewText%>
+                        </div>
+
+                        <div class="rating">
+                            Rating: <%= i.rating %>
+                        </div>
+
+                    </div>
+                    <div class="editButtons">
+                        <button type="button" class="btn btn-primary edit-review-btn" data-bs-toggle="modal" data-bs-target="#reviewModal"
+                        data-review="<%= i.reviewText %>" data-reviewId="<%= i.reviewId %>" data-rating="<%= i.rating %>"
+                        data-username="<%= i.username%>" data-title="<%= i.title%>" data-spoiler="<%=i.containsSpoiler%>"> 
+                        Edit Review </button>
+
+                        <a href="/review/delete?reviewId=<%=i.reviewId%>"><button type="button" class="btn btn-primary">Delete</button></a>
+                    </div>
+                <br><br>
+                </div>
+            <% } %>
+                
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal fade"  id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="reviewModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/review/edit" method="post">
+                    <div class="modal-body">
+                            Rating: <input type="number" min="1" max="5" name="updatedRating" id="updatedRating" ><br>
+                            Review:<br><textarea type="text" name="updatedReview" id="updatedReview" rows="5" name="updatedReview" class="form-control"></textarea>
+                            Spoiler: <input type="checkbox" name="isSpoiler" id="updatedSpoiler">
+                            <input type="hidden" name="reviewId" id="reviewId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="updateButton">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const reviewModal = document.getElementById('reviewModal');
+            const updatedReviewInput = document.getElementById('updatedReview');
+            const updatedRatingInput = document.getElementById('updatedRating');
+            const reviewId = document.getElementById('reviewId');
+            const modalHeader = document.getElementById('reviewModalLabel');
+
+            document.querySelectorAll('.edit-review-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const reviewText = button.getAttribute('data-review');
+                    const ratingText = button.getAttribute('data-rating');
+                    const usernameText = button.getAttribute('data-username');
+                    const titleText = button.getAttribute('data-title');
+                    const spoilerCheck = button.getAttribute('data-spoiler');
+                    updatedReviewInput.value = reviewText;
+                    updatedRatingInput.value = ratingText;
+                    reviewId.value = button.getAttribute('data-reviewId');
+                    document.getElementById('updatedSpoiler').checked = spoilerCheck === '1';
+                    modalHeader.innerHTML = `${usernameText}<br>${titleText}`
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -148,6 +148,68 @@ app.post('/addReview', (req, res)=>{
 
 //---------------------------------------------
 
+// User Review Page
+
+app.get('/user/reviews', async (req, res) => {
+    let sql =  `SELECT username, reviewText, rating, title, reviewId, Book.bookId, containsSpoiler
+                FROM Users
+                JOIN Review ON Users.userId = Review.userId
+                JOIN Book ON Review.bookId = Book.bookId
+                WHERE Users.userId = ?`;
+    let sqlParams = 1;
+    const [rows] = await conn.query(sql, sqlParams);
+
+    const reviewsWithBookInfo = await Promise.all(rows.map(async function(review){
+        let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=AIzaSyAl2mrngXoYXq4S7MLXCU_SZnFuQD0kweY`;
+        try{
+            let response = await fetch(url);
+            let data = await response.json();
+
+            review.bookInfo = {
+                thumbnail: data.volumeInfo?.imageLinks?.thumbnail || null,
+                authors: data.volumeInfo?.authors || [],
+            };
+
+        } catch(err) {
+            console.error(`Error fetching book info for ID ${review.bookId}:`, err);
+            review.bookInfo = null;
+        }
+        return review;
+    }));
+    res.render("viewUserReviews",{"reviews": reviewsWithBookInfo});
+});
+
+app.post("/review/edit", async function(req, res){
+    let containsSpoiler = req.body.isSpoiler ? 1 : 0;
+
+    let sql = `UPDATE Review
+                SET reviewText = ?,
+                    rating = ?,
+                    containsSpoiler = ?
+                WHERE reviewId =  ?`;
+
+
+    let params = [req.body.updatedReview,  
+                req.body.updatedRating, containsSpoiler, req.body.reviewId];         
+    const [rows] = await conn.query(sql,params);
+    res.redirect("viewUserReviews");
+});
+
+app.get("/review/delete", async function(req, res){
+    let reviewId = req.query.reviewId;
+
+
+    let sql = `DELETE 
+            FROM Review
+            WHERE reviewId = ?`;
+        
+    const [rows] = await conn.query(sql, [reviewId]);
+
+    res.redirect("viewUserReviews");
+});
+
+//---------------------------------------------
+
 app.get('/dbTest', async (req, res) => {
     let sql = `SELECT username
                 FROM Users
