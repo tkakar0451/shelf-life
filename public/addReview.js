@@ -5,7 +5,7 @@
 
 // Event listeners
 
-let addReviewLinks = document.querySelectorAll(".addNewReview");
+let addReviewLinks = document.querySelectorAll("#addNewReview");
 for(button of addReviewLinks){
     button.addEventListener("click", addReviewWindow);
 }
@@ -13,4 +13,7 @@ for(button of addReviewLinks){
 async function addReviewWindow(){
     var myModal = new bootstrap.Modal(document.getElementById('addReviewModal'));
     myModal.show();
+
+    let title = document.getElementById('book-title').textContent;
+    document.getElementById('modalTitle').textContent = `${title}`;
 }
