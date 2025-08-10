@@ -1,0 +1,48 @@
+<!-- 
+  File: views/userProfile.ejs
+  Author: Tariq Kakar
+  Description: user profile page
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>User Profile | Shelf Life</title>
+
+        <!-- Link to custom CSS file -->
+        <link rel="stylesheet" href="/style.css" />
+
+        <!-- Google Font for styling -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+
+    <body>
+        <!-- Include reusable header partial -->
+        <%- include("partials/header") %>
+
+        <h1><%= user.username %>'s Profile</h1>
+        <hr />
+        <br><br>
+
+        <h2>My Reviews</h2>
+        <% if (reviews.length > 0) { %> <% reviews.forEach(review => { %>
+        <div class="review-card">
+            <% if (review.bookInfo && review.bookInfo.thumbnail) { %>
+            <img src="<%= review.bookInfo.thumbnail %>" alt="Book cover" />
+            <% } %>
+            <h3><%= review.title %></h3>
+            <p><strong>Rating:</strong> <%= review.rating %> / 5</p>
+            <p>"<%= review.reviewText %>"</p>
+        </div>
+        <% }); %> <% } else { %>
+        <p>You haven't written any reviews yet!</p>
+        <% } %>
+
+        <!-- Include reusable footer partial -->
+        <%- include("partials/footer") %>
+    </body>
+</html>

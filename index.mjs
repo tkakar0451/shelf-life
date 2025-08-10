@@ -10,28 +10,30 @@ app.use(express.static('public'));
 //for Express to get values using POST method
 app.use(express.urlencoded({ extended: true }));
 
-app.set('trust proxy', 1); 
-app.use(session({
-  secret: 'secret',
-  resave: false,
-  saveUninitialized: true
-}))
+app.set('trust proxy', 1);
+app.use(
+    session({
+        secret: 'secret',
+        resave: false,
+        saveUninitialized: true,
+    })
+);
 
 // setting up database connection pool
 const pool = mysql.createPool({
-    host: "jason-smevog.site",
-    user: "jasonsme_webuser",
-    password: "CSUMB-cst336",
-    database: "jasonsme_shelf_life",
+    host: 'jason-smevog.site',
+    user: 'jasonsme_webuser',
+    password: 'CSUMB-cst336',
+    database: 'jasonsme_shelf_life',
     connectionLimit: 10,
     waitForConnections: true,
 });
 const conn = await pool.getConnection();
 
 //routes
-app.get("/", (req, res) => {
-    res.render("index", { isLoggedIn: false }); // or true for testing
-  });
+app.get('/', (req, res) => {
+    res.render('index', { isLoggedIn: false }); // or true for testing
+});
 
 /*
     Routes for Signup and Login
@@ -39,37 +41,38 @@ app.get("/", (req, res) => {
 
 // route to go to signup page
 app.get('/signup', (req, res) => {
-    res.render('signup', { warning: null,
-                        logIn: req.session.authenticated,
-     });
+    res.render('signup', { warning: null, logIn: req.session.authenticated });
 });
 
-app.post('/signup', async(req, res) => {
+app.post('/signup', async (req, res) => {
     let inputUsername = req.body.username;
     let inputPassword = req.body.password;
 
     // check for input
-    if(inputUsername.trim().length == 0){
-        return res.render('signup', { warning: "Username cannot be empty.",
-                        logIn: req.session.authenticated,
+    if (inputUsername.trim().length == 0) {
+        return res.render('signup', {
+            warning: 'Username cannot be empty.',
+            logIn: req.session.authenticated,
         });
     }
-    if (inputPassword.trim().length == 0){
-        return res.render('signup', { warning: "Password is not valid.",
-                        logIn: req.session.authenticated,
+    if (inputPassword.trim().length == 0) {
+        return res.render('signup', {
+            warning: 'Password is not valid.',
+            logIn: req.session.authenticated,
         });
     }
 
     // Check in database if there is similar username
     let sql = `SELECT username
                 FROM Users
-                WHERE username = ?`;    
-    
+                WHERE username = ?`;
+
     const [rows] = await conn.query(sql, [inputUsername]);
-    
-    if(rows.length > 0){
-        return res.render('signup', { warning: "Username already exists.",
-                        logIn: req.session.authenticated,
+
+    if (rows.length > 0) {
+        return res.render('signup', {
+            warning: 'Username already exists.',
+            logIn: req.session.authenticated,
         });
     }
 
@@ -79,48 +82,55 @@ app.post('/signup', async(req, res) => {
 });
 
 // route to login page
-app.get('/login', (req, res) =>{
+app.get('/login', (req, res) => {
     // if user is not login
-    if(!req.session.authenticated){
-        res.render('login', { warning: null,
-                            logIn: req.session.authenticated,
+    if (!req.session.authenticated) {
+        res.render('login', {
+            warning: null,
+            logIn: false,
         });
-    } else{
+    } else {
         // if login, redirect to MyProfile page
+        res.redirect('/user/profile');
     }
 });
 
-app.post('/login', async(req, res) =>{
+app.post('/login', async (req, res) => {
     let inputUsername = req.body.username;
     let inputPassword = req.body.password;
-    
-    let sql = `SELECT username, password
+
+    // select all so we get the user id too
+    let sql = `SELECT *
                 FROM Users
-                WHERE username = ? AND password = ?`;
-                
+                WHERE username = ?`;
+
     const [rows] = await conn.query(sql, [inputUsername, inputPassword]);
-    
+
     // return to main page after logging in
     // if not correct, stay at login page and stage the error
-    if(rows.length > 0){
+    if (rows.length > 0) {
         req.session.authenticated = true;
+        // save user object
+        req.session.user = rows[0];
         return res.redirect('/');
-    } else{
-        return res.render('login', { warning: 'Invalid username or password.' });
+    } else {
+        return res.render('login', {
+            warning: 'Invalid username or password.',
+        });
     }
 });
 
 // route to logout and back to main page (landing page)
-app.get('/logout', isAuthenticated, (req, res)=>{
+app.get('/logout', isAuthenticated, (req, res) => {
     req.session.destroy();
-    res.redirect("/");
-})
+    res.redirect('/');
+});
 
 // function to know if the user is login or not
-function isAuthenticated(req, res, next){
-    if(!req.session.authenticated){
-        res.redirect("/");
-    }else{
+function isAuthenticated(req, res, next) {
+    if (!req.session.authenticated) {
+        res.redirect('/');
+    } else {
         next();
     }
 }
@@ -130,28 +140,116 @@ function isAuthenticated(req, res, next){
 /*
     Routes for Review
 */
-app.get('/addReview', async(req, res)=>{
+app.get('/addReview', async (req, res) => {
     // TODO: get the whole list of books in database to display
 
-    res.render('addReview', { logIn: req.session.authenticated,
-                            warning: null,
+    res.render('addReview', {
+        logIn: req.session.authenticated,
+        warning: null,
     });
 });
 
-app.post('/addReview', (req, res)=>{
+app.post('/addReview', (req, res) => {
     // TODO: check review before adding to database
 
-    res.render('addReview', { logIn: req.session.authenticated,
-                            warning: null,
+    res.render('addReview', {
+        logIn: req.session.authenticated,
+        warning: null,
     });
+});
+
+//---------------------------------------------
+
+// User Profile Page - Displays user info and their reviews
+app.get('/user/profile', async (req, res) => {
+    // authentication check
+    if (!req.session.authenticated) {
+        return res.redirect('/login');
+    }
+
+    // get logged in user's ID from session
+    const loggedInUserId = req.session.user.userId;
+
+    // fetch all reviews for user
+    let sql = `SELECT reviewText, rating, title, reviewId, Book.bookId, containsSpoiler
+                   FROM Review
+                   JOIN Book ON Review.bookId = Book.bookId
+                   WHERE Review.userId = ?`;
+
+    const [reviews] = await conn.query(sql, [loggedInUserId]);
+
+    // fetch additional book info from Google Books API for each review
+    const reviewsWithBookInfo = await Promise.all(
+        reviews.map(async function (review) {
+            let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=YOUR_API_KEY_HERE`; // Replace with your actual key
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
+                review.bookInfo = {
+                    thumbnail: data.volumeInfo?.imageLinks?.thumbnail || null,
+                    authors: data.volumeInfo?.authors || [],
+                };
+            } catch (apiErr) {
+                console.error(`API Error for bookId ${review.bookId}:`, apiErr);
+                review.bookInfo = null; // Ensure bookInfo exists even if API fails
+            }
+            return review;
+        })
+    );
+
+    res.render('userProfile', {
+        user: req.session.user, // The logged-in user's info
+        reviews: reviewsWithBookInfo, // The array of their reviews
+    });
+});
+
+app.post('/review/edit', async function (req, res) {
+    // authentiation check
+    if (!req.session.authenticated) {
+        return res.redirect('/login');
+    }
+
+    let containsSpoiler = req.body.isSpoiler ? 1 : 0;
+
+    let sql = `UPDATE Review
+               SET reviewText = ?,
+                   rating = ?,
+                   containsSpoiler = ?
+               WHERE reviewId = ?`;
+
+    let params = [
+        req.body.updatedReview,
+        req.body.updatedRating,
+        containsSpoiler,
+        req.body.reviewId,
+    ];
+
+    await conn.query(sql, params);
+    res.redirect('/user/profile');
+});
+
+app.get('/review/delete', async (req, res) => {
+    // authentication check
+    if (!req.session.authenticated) {
+        return res.redirect('/login');
+    }
+
+    let reviewId = req.query.reviewId;
+
+    let sql = `DELETE FROM Review 
+                WHERE reviewId = ?`;
+
+    await conn.query(sql, [reviewId]);
+
+    res.redirect('/user/profile');
 });
 
 //---------------------------------------------
 
 // User Review Page
 
-app.get('/user/reviews', async (req, res) => {
-    let sql =  `SELECT username, reviewText, rating, title, reviewId, Book.bookId, containsSpoiler
+/* app.get('/user/reviews', async (req, res) => {
+    let sql = `SELECT username, reviewText, rating, title, reviewId, Book.bookId, containsSpoiler
                 FROM Users
                 JOIN Review ON Users.userId = Review.userId
                 JOIN Book ON Review.bookId = Book.bookId
@@ -159,27 +257,31 @@ app.get('/user/reviews', async (req, res) => {
     let sqlParams = 1;
     const [rows] = await conn.query(sql, sqlParams);
 
-    const reviewsWithBookInfo = await Promise.all(rows.map(async function(review){
-        let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=AIzaSyAl2mrngXoYXq4S7MLXCU_SZnFuQD0kweY`;
-        try{
-            let response = await fetch(url);
-            let data = await response.json();
+    const reviewsWithBookInfo = await Promise.all(
+        rows.map(async function (review) {
+            let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=AIzaSyAl2mrngXoYXq4S7MLXCU_SZnFuQD0kweY`;
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
 
-            review.bookInfo = {
-                thumbnail: data.volumeInfo?.imageLinks?.thumbnail || null,
-                authors: data.volumeInfo?.authors || [],
-            };
-
-        } catch(err) {
-            console.error(`Error fetching book info for ID ${review.bookId}:`, err);
-            review.bookInfo = null;
-        }
-        return review;
-    }));
-    res.render("viewUserReviews",{"reviews": reviewsWithBookInfo});
+                review.bookInfo = {
+                    thumbnail: data.volumeInfo?.imageLinks?.thumbnail || null,
+                    authors: data.volumeInfo?.authors || [],
+                };
+            } catch (err) {
+                console.error(
+                    `Error fetching book info for ID ${review.bookId}:`,
+                    err
+                );
+                review.bookInfo = null;
+            }
+            return review;
+        })
+    );
+    res.render('viewUserReviews', { reviews: reviewsWithBookInfo });
 });
 
-app.post("/review/edit", async function(req, res){
+app.post('/review/edit', async function (req, res) {
     let containsSpoiler = req.body.isSpoiler ? 1 : 0;
 
     let sql = `UPDATE Review
@@ -188,25 +290,27 @@ app.post("/review/edit", async function(req, res){
                     containsSpoiler = ?
                 WHERE reviewId =  ?`;
 
-
-    let params = [req.body.updatedReview,  
-                req.body.updatedRating, containsSpoiler, req.body.reviewId];         
-    const [rows] = await conn.query(sql,params);
-    res.redirect("viewUserReviews");
+    let params = [
+        req.body.updatedReview,
+        req.body.updatedRating,
+        containsSpoiler,
+        req.body.reviewId,
+    ];
+    const [rows] = await conn.query(sql, params);
+    res.redirect('viewUserReviews');
 });
 
-app.get("/review/delete", async function(req, res){
+app.get('/review/delete', async function (req, res) {
     let reviewId = req.query.reviewId;
-
 
     let sql = `DELETE 
             FROM Review
             WHERE reviewId = ?`;
-        
+
     const [rows] = await conn.query(sql, [reviewId]);
 
-    res.redirect("viewUserReviews");
-});
+    res.redirect('viewUserReviews');
+}); */
 
 //---------------------------------------------
 
