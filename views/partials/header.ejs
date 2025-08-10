@@ -14,7 +14,7 @@
 
   <!-- Google Fonts for cozy look and feel -->
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap" rel="stylesheet" />
-
+ 
   <!-- Link to main custom stylesheet -->
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -27,9 +27,19 @@
       <a href="/">Shelf Life</a>
     </div>
 
-    <!-- Navigation links -->
-    <nav class="nav-links">
-      <a href="/login">Login</a>
-      <a href="/signup">Signup</a>
-    </nav>
+    <!-- Navigation bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"></a>
+
+      <!-- Conditionally show links based on login state -->
+      <% if (logIn) { %>
+        <a class="nav-link text-white" href="/profile">My Profile</a>
+        <a class="nav-link text-white" href="/logout">Logout</a>
+      <% } else { %>
+        <a class="nav-link text-white" href="/login">Login</a>
+        <a class="nav-link text-white" href="/signup">Signup</a>
+      <% } %>
+    </div>
+  </nav>
   </header>
