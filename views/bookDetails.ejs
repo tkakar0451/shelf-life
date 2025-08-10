@@ -45,7 +45,7 @@
 
       <!-- Book info on the right -->
       <div class="col-md-8">
-        <h2 id="book-title"><%= book.title %></h2>
+        <h2 id="book-title"><%= book.title %></h2>        
         <h5 class="text-muted">By <%= book.authors %></h5>
         <p><%= book.description ? book.description : "No Description" %></p>
 
@@ -92,7 +92,9 @@
   </div>
 
   <!-- Modal for adding a new review (defined in a separate partial) -->
-  <%- include('partials/addReview') %>
+    <form method="POST" action="/api/addReview/<%= bookId %>">
+        <%- include('partials/addReview') %>
+    </form>
   
   <!-- Modal prompting user to log in -->
   <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel" aria-hidden="true">

@@ -16,7 +16,13 @@ async function addReviewWindow(){
     myModal.show();
 
     let title = document.getElementById('book-title').textContent;
+
     document.getElementById('modalTitle').textContent = `${title}`;
+    document.getElementById('hiddenBookTitle').value = `${title}`;
+}
+
+function checkReview(){
+    
 }
 
 function cleanUpModal(){
