@@ -6,6 +6,7 @@
 // Event listeners
 
 let addReviewLinks = document.querySelectorAll("#addNewReview");
+let closeButton = document.querySelector('#close-button').addEventListener("click", cleanUpModal);
 for(button of addReviewLinks){
     button.addEventListener("click", addReviewWindow);
 }
@@ -16,4 +17,10 @@ async function addReviewWindow(){
 
     let title = document.getElementById('book-title').textContent;
     document.getElementById('modalTitle').textContent = `${title}`;
+}
+
+function cleanUpModal(){
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style = ''; // clear any leftover inline styles
 }
