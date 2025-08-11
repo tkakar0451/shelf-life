@@ -211,14 +211,20 @@ app.get('/books/:id', async (req, res) => {
     );
     const data = await response.json();
 
-    // TODO: fetch the reviews
-    let reviewRows = [];
+    // fetch the reviews
+    let sql =  `SELECT *
+                FROM Review r
+                JOIN Users u ON r.userId = u.userId
+                WHERE r.bookId = ?`
+    let params = [bookID];
+
+    let [reviewRows] = await conn.query(sql, params);
     let bookDetail = data.volumeInfo;
     return res.render('bookDetails', {
         logIn: req.session.authenticated,
         book: bookDetail,
         bookId: data.id,
-        reviews: reviewRows,
+        reviews: reviewRows
     });
 });
 
@@ -260,8 +266,6 @@ app.get('/user/profile', async (req, res) => {
             return review;
         })
     );
-
-    console.log(reviewsWithBookInfo);
 
     res.render('userProfile', {
         user: req.session.user, // The logged-in user's info
