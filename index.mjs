@@ -119,6 +119,7 @@ app.post('/login', async (req, res) => {
     } else {
         return res.render('login', {
             warning: 'Invalid username or password.',
+            logIn: false
         });
     }
 });
@@ -154,7 +155,7 @@ app.get('/addReview', async (req, res) => {
 
 app.post('/api/addReview/:id', async (req, res) => {
     // Receive and convert information
-    let userId = req.session.userId;
+    let userId = req.session.user.userId;
     let bookId = req.params.id;
     const { bookTitle, rating, review, spoilerCheckbox } = req.body;
     const isSpoiler = spoilerCheckbox === 'true';
