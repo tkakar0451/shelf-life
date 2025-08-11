@@ -26,7 +26,7 @@
 
       <!-- Conditionally show links based on login state -->
       <% if (logIn) { %>
-        <a class="nav-link text-white" href="/profile">My Profile</a>
+        <a class="nav-link text-white" href="/user/profile">My Profile</a>
         <a class="nav-link text-white" href="/logout">Logout</a>
       <% } else { %>
         <a class="nav-link text-white" href="/login">Login</a>
@@ -47,7 +47,7 @@
       <div class="col-md-8">
         <h2 id="book-title"><%= book.title %></h2>        
         <h5 class="text-muted">By <%= book.authors %></h5>
-        <p><%= book.description ? book.description : "No Description" %></p>
+        <p><%- book.description ? book.description : "No Description" %></p>
 
         <!-- Button to add a review (only if logged in) -->
         <% if (logIn) { %>
