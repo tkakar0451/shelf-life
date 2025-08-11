@@ -300,3 +300,11 @@ footer p {
   object-fit: contain;
   margin-bottom: 0.5rem;
 }
+
+/* ========== User Review Card ========== */
+.review-card {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}

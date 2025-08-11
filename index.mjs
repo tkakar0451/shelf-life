@@ -76,7 +76,20 @@ app.post('/signup', async (req, res) => {
         });
     }
 
-    // TODO: add new user into database and store userId into session
+    // add new user into database and store userId into session
+    sql =  `INSERT INTO Users
+            (username, password)
+            VALUES (?, ?)`;
+    let params = [inputUsername, inputPassword];
+    await conn.query(sql, params);
+
+    sql =  `SELECT *
+            FROM Users
+            WHERE username = ?`;
+
+    const [user] = await conn.query(sql, [inputUsername]);
+
+    req.session.user = user[0];
 
     // Go to main page (or MyProfile page)
     req.session.authenticated = true;
@@ -232,7 +245,7 @@ app.get('/user/profile', async (req, res) => {
     // fetch additional book info from Google Books API for each review
     const reviewsWithBookInfo = await Promise.all(
         reviews.map(async function (review) {
-            let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=YOUR_API_KEY_HERE`; // Replace with your actual key
+            let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=AIzaSyAl2mrngXoYXq4S7MLXCU_SZnFuQD0kweY`; // Replace with your actual key
             try {
                 let response = await fetch(url);
                 let data = await response.json();
@@ -247,6 +260,8 @@ app.get('/user/profile', async (req, res) => {
             return review;
         })
     );
+
+    console.log(reviewsWithBookInfo);
 
     res.render('userProfile', {
         user: req.session.user, // The logged-in user's info
