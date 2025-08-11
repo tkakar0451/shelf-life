@@ -117,7 +117,7 @@ app.post('/login', async (req, res) => {
     // select all so we get the user id too
     let sql = `SELECT *
                 FROM Users
-                WHERE username = ?`;
+                WHERE username = ? AND password = ?`;
 
     const [rows] = await conn.query(sql, [inputUsername, inputPassword]);
 
