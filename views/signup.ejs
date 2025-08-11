@@ -29,6 +29,13 @@
       <h2>Create Your Account</h2>
       <p>Join Shelf Life and start discovering books you love!</p>
 
+      <!-- check if username exists --> 
+      <% if (warning) { %>
+        <p style="color: red; text-align: center; font-weight: bold; margin-bottom: 1rem;">
+            <%= warning %>
+        </p>
+      <% } %>
+
       <!-- Full Name field -->
       <label for="name">Full Name</label>
       <input type="text" name="username" id="name" required>

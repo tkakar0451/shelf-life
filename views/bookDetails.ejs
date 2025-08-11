@@ -15,6 +15,8 @@
       <!-- Book cover on the left -->
       <div class="col-md-4">
         <img src="<%= book.imageLinks.thumbnail %>" alt="Book Cover" class="img-fluid shadow">
+        <br> <br>
+        <h3>Average Rating: <%= book.averageRating %></h3>
       </div>
 
       <!-- Book info on the right -->
@@ -37,7 +39,7 @@
 
         <!-- User reviews section -->
         <div class="mt-5">
-          <h4>User Reviews</h4>
+          <h4>Review Highlights</h4>
 
           <!-- If no reviews exist yet -->
           <% if (reviews.length === 0) { %>
@@ -50,8 +52,8 @@
                   <p><strong><%= review.username %></strong> rated it <%= review.rating %>/5</p>
 
                   <!-- Show a spoiler badge if applicable -->
-                  <% if (review.containsSpoilers) { %>
-                    <span class="badge bg-warning text-dark">Spoiler</span>
+                  <% if (review.containsSpoiler) { %>
+                    <p class="spoiler-warning">⚠️ Contains Spoilers</p>
                   <% } %>
 
                   <!-- Review text -->

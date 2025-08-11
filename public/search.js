@@ -40,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
           info.imageLinks?.thumbnail ||
           info.imageLinks?.smallThumbnail ||
           "/images/default-book.png";
+        // rating system
+        let starRating = generateStarRating(info.averageRating);
 
         // Create card element
         const card = document.createElement("div");
@@ -50,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <img src="${thumbnail}" alt="${title}">
           <div class="card-title">${title}</div>
           <div class="card-author">${authors}</div>
-          <div class="star-rating">★★★★☆</div>
+          <div class="star-rating">${starRating}</div>
           <a href="/books/${id}" class="btn">View Details</a>
         `;
 
@@ -65,3 +67,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// dynamic star rating system instead of placeholder
+function generateStarRating(rating) {
+    let starsHtml = '';
+    // round to the nearest half
+    const roundedRating = Math.round(rating * 2) / 2;
+
+    switch (roundedRating) {
+        case 0:
+            starsHtml = '☆☆☆☆☆';
+            break;
+        case 0.5:
+            starsHtml = '½☆☆☆☆';
+            break;
+        case 1:
+            starsHtml = '★☆☆☆☆';
+            break;
+        case 1.5:
+            starsHtml = '★½☆☆☆';
+            break;
+        case 2:
+            starsHtml = '★★☆☆☆';
+            break;
+        case 2.5:
+            starsHtml = '★★½☆☆';
+            break;
+        case 3:
+            starsHtml = '★★★☆☆';
+            break;
+        case 3.5:
+            starsHtml = '★★★½☆';
+            break;
+        case 4:
+            starsHtml = '★★★★☆';
+            break;
+        case 4.5:
+            starsHtml = '★★★★½';
+            break;
+        case 5:
+            starsHtml = '★★★★★';
+            break;
+        default:
+            starsHtml = '☆☆☆☆☆'; // default if there are no reviews
+    }
+    return starsHtml;
+}
