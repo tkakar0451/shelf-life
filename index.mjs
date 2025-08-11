@@ -41,6 +41,11 @@ app.get('/', (req, res) => {
 
 // route to go to signup page
 app.get('/signup', (req, res) => {
+    // to redirect to book details page if user signs up from there
+    if (req.query.redirectUrl) {
+        req.session.returnTo = req.query.redirectUrl;
+    }
+
     res.render('signup', { warning: null, logIn: req.session.authenticated });
 });
 
@@ -77,13 +82,13 @@ app.post('/signup', async (req, res) => {
     }
 
     // add new user into database and store userId into session
-    sql =  `INSERT INTO Users
+    sql = `INSERT INTO Users
             (username, password)
             VALUES (?, ?)`;
     let params = [inputUsername, inputPassword];
     await conn.query(sql, params);
 
-    sql =  `SELECT *
+    sql = `SELECT *
             FROM Users
             WHERE username = ?`;
 
@@ -91,13 +96,22 @@ app.post('/signup', async (req, res) => {
 
     req.session.user = user[0];
 
-    // Go to main page (or MyProfile page)
+    // Go to main page (or MyProfile page) or book details page user was on
     req.session.authenticated = true;
-    return res.redirect('/');
+
+    // redirect to the stored URL, or homepage if none exists
+    const redirectUrl = req.session.returnTo || '/';
+    delete req.session.returnTo; // clear stored url
+    return res.redirect(redirectUrl);
 });
 
 // route to login page
 app.get('/login', (req, res) => {
+    // to redirect to book details page if user signs up from there
+    if (req.query.redirectUrl) {
+        req.session.returnTo = req.query.redirectUrl;
+    }
+
     // if user is not login
     if (!req.session.authenticated) {
         res.render('login', {
@@ -128,11 +142,15 @@ app.post('/login', async (req, res) => {
         // save user object
         // we want the whole user object
         req.session.user = rows[0];
-        return res.redirect('/');
+
+        // redirect to the stored URL, or homepage if none exists
+        const redirectUrl = req.session.returnTo || '/';
+        delete req.session.returnTo; // clear stored url
+        return res.redirect(redirectUrl);
     } else {
         return res.render('login', {
             warning: 'Invalid username or password.',
-            logIn: false
+            logIn: false,
         });
     }
 });
@@ -212,10 +230,10 @@ app.get('/books/:id', async (req, res) => {
     const data = await response.json();
 
     // fetch the reviews
-    let sql =  `SELECT *
+    let sql = `SELECT *
                 FROM Review r
                 JOIN Users u ON r.userId = u.userId
-                WHERE r.bookId = ?`
+                WHERE r.bookId = ?`;
     let params = [bookID];
 
     let [reviewRows] = await conn.query(sql, params);
@@ -224,7 +242,7 @@ app.get('/books/:id', async (req, res) => {
         logIn: req.session.authenticated,
         book: bookDetail,
         bookId: data.id,
-        reviews: reviewRows
+        reviews: reviewRows,
     });
 });
 

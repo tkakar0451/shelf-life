@@ -82,8 +82,10 @@
           You must be logged in to add a review.
         </div>
         <div class="modal-footer">
-          <a href="/login" class="btn btn-primary">Login</a>
-          <a href="/signup" class="btn btn-secondary">Sign Up</a>
+          <div class="modal-footer">
+              <a href="/login?redirectUrl=/books/<%= bookId %>" class="btn btn-primary">Login</a>
+              <a href="/signup?redirectUrl=/books/<%= bookId %>" class="btn btn-secondary">Sign Up</a>
+          </div>
         </div>
       </div>
     </div>
