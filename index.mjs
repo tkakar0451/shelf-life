@@ -30,6 +30,29 @@ const pool = mysql.createPool({
 });
 const conn = await pool.getConnection();
 
+// functions
+function generateStarRating(rating) {
+    let stars = '';
+    // round to the nearest half
+    const roundedRating = Math.round(rating * 2) / 2;
+
+    switch (roundedRating) {
+        case 0:   stars = '☆☆☆☆☆'; break;
+        case 0.5: stars = '½☆☆☆☆'; break;
+        case 1:   stars = '★☆☆☆☆'; break;
+        case 1.5: stars = '★½☆☆☆'; break;
+        case 2:   stars = '★★☆☆☆'; break;
+        case 2.5: stars = '★★½☆☆'; break;
+        case 3:   stars = '★★★☆☆'; break;
+        case 3.5: stars = '★★★½☆'; break;
+        case 4:   stars = '★★★★☆'; break;
+        case 4.5: stars = '★★★★½'; break;
+        case 5:   stars = '★★★★★'; break;
+        default:  stars = '☆☆☆☆☆'; // default if there are no reviews
+    }
+    return stars;
+}
+
 //routes
 app.get('/', (req, res) => {
     res.render('index', { logIn: req.session.authenticated }); // or true for testing
@@ -243,6 +266,7 @@ app.get('/books/:id', async (req, res) => {
         book: bookDetail,
         bookId: data.id,
         reviews: reviewRows,
+        generateStarRating,
     });
 });
 

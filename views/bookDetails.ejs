@@ -16,7 +16,8 @@
       <div class="col-md-4">
         <img src="<%= book.imageLinks.thumbnail %>" alt="Book Cover" class="img-fluid shadow">
         <br> <br>
-        <h3>Average Rating: <%= book.averageRating %></h3>
+        <h3>Average Rating:</h3>
+        <h4 style="color:orange"><%= generateStarRating(book.averageRating) %></h4>
       </div>
 
       <!-- Book info on the right -->
