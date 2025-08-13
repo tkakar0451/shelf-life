@@ -6,7 +6,7 @@
 // Event listeners
 
 let addReviewLinks = document.querySelectorAll("#addNewReview");
-// let closeButton = document.querySelector('#close-button').addEventListener("click", cleanUpModal);
+let closeButton = document.querySelector('.btn-close').addEventListener("click", cleanUpModal);
 for(button of addReviewLinks){
     button.addEventListener("click", addReviewWindow);
 }
