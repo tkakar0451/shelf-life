@@ -31,6 +31,9 @@
 
     <!-- Redirect for users who need to sign up -->
     <p class="signup-redirect">Don't have an account? <a href="/signup">Sign up here</a></p>
+    <% if (typeof warning != "undefined") { %>
+        <h4 class="signup-redirect" style="color: red;"><%=warning%></h4>
+    <% } %>
 
   </div>
 </div>

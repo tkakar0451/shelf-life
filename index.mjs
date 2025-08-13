@@ -30,6 +30,29 @@ const pool = mysql.createPool({
 });
 const conn = await pool.getConnection();
 
+// functions
+function generateStarRating(rating) {
+    let stars = '';
+    // round to the nearest half
+    const roundedRating = Math.round(rating * 2) / 2;
+
+    switch (roundedRating) {
+        case 0:   stars = '☆☆☆☆☆'; break;
+        case 0.5: stars = '½☆☆☆☆'; break;
+        case 1:   stars = '★☆☆☆☆'; break;
+        case 1.5: stars = '★½☆☆☆'; break;
+        case 2:   stars = '★★☆☆☆'; break;
+        case 2.5: stars = '★★½☆☆'; break;
+        case 3:   stars = '★★★☆☆'; break;
+        case 3.5: stars = '★★★½☆'; break;
+        case 4:   stars = '★★★★☆'; break;
+        case 4.5: stars = '★★★★½'; break;
+        case 5:   stars = '★★★★★'; break;
+        default:  stars = '☆☆☆☆☆'; // default if there are no reviews
+    }
+    return stars;
+}
+
 //routes
 app.get('/', (req, res) => {
     res.render('index', { logIn: req.session.authenticated }); // or true for testing
@@ -41,6 +64,11 @@ app.get('/', (req, res) => {
 
 // route to go to signup page
 app.get('/signup', (req, res) => {
+    // to redirect to book details page if user signs up from there
+    if (req.query.redirectUrl) {
+        req.session.returnTo = req.query.redirectUrl;
+    }
+
     res.render('signup', { warning: null, logIn: req.session.authenticated });
 });
 
@@ -76,15 +104,37 @@ app.post('/signup', async (req, res) => {
         });
     }
 
-    // TODO: add new user into database and store userId into session
+    // add new user into database and store userId into session
+    sql = `INSERT INTO Users
+            (username, password)
+            VALUES (?, ?)`;
+    let params = [inputUsername, inputPassword];
+    await conn.query(sql, params);
 
-    // Go to main page (or MyProfile page)
+    sql = `SELECT *
+            FROM Users
+            WHERE username = ?`;
+
+    const [user] = await conn.query(sql, [inputUsername]);
+
+    req.session.user = user[0];
+
+    // Go to main page (or MyProfile page) or book details page user was on
     req.session.authenticated = true;
-    return res.redirect('/');
+
+    // redirect to the stored URL, or homepage if none exists
+    const redirectUrl = req.session.returnTo || '/';
+    delete req.session.returnTo; // clear stored url
+    return res.redirect(redirectUrl);
 });
 
 // route to login page
 app.get('/login', (req, res) => {
+    // to redirect to book details page if user signs up from there
+    if (req.query.redirectUrl) {
+        req.session.returnTo = req.query.redirectUrl;
+    }
+
     // if user is not login
     if (!req.session.authenticated) {
         res.render('login', {
@@ -104,7 +154,7 @@ app.post('/login', async (req, res) => {
     // select all so we get the user id too
     let sql = `SELECT *
                 FROM Users
-                WHERE username = ?`;
+                WHERE username = ? AND password = ?`;
 
     const [rows] = await conn.query(sql, [inputUsername, inputPassword]);
 
@@ -115,11 +165,15 @@ app.post('/login', async (req, res) => {
         // save user object
         // we want the whole user object
         req.session.user = rows[0];
-        return res.redirect('/');
+
+        // redirect to the stored URL, or homepage if none exists
+        const redirectUrl = req.session.returnTo || '/';
+        delete req.session.returnTo; // clear stored url
+        return res.redirect(redirectUrl);
     } else {
         return res.render('login', {
             warning: 'Invalid username or password.',
-            logIn: false
+            logIn: false,
         });
     }
 });
@@ -198,14 +252,21 @@ app.get('/books/:id', async (req, res) => {
     );
     const data = await response.json();
 
-    // TODO: fetch the reviews
-    let reviewRows = [];
+    // fetch the reviews
+    let sql = `SELECT *
+                FROM Review r
+                JOIN Users u ON r.userId = u.userId
+                WHERE r.bookId = ?`;
+    let params = [bookID];
+
+    let [reviewRows] = await conn.query(sql, params);
     let bookDetail = data.volumeInfo;
     return res.render('bookDetails', {
         logIn: req.session.authenticated,
         book: bookDetail,
         bookId: data.id,
         reviews: reviewRows,
+        generateStarRating,
     });
 });
 
@@ -232,7 +293,7 @@ app.get('/user/profile', async (req, res) => {
     // fetch additional book info from Google Books API for each review
     const reviewsWithBookInfo = await Promise.all(
         reviews.map(async function (review) {
-            let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=YOUR_API_KEY_HERE`; // Replace with your actual key
+            let url = `https://www.googleapis.com/books/v1/volumes/${review.bookId}?key=AIzaSyAl2mrngXoYXq4S7MLXCU_SZnFuQD0kweY`; // Replace with your actual key
             try {
                 let response = await fetch(url);
                 let data = await response.json();

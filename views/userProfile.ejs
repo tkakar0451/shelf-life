@@ -17,6 +17,7 @@
 
     <body>
         <%- include("partials/header") %>
+        <br>
 
         <h1><%= user.username %>'s Profile</h1>
         <hr />
@@ -26,38 +27,47 @@
         <% if (reviews.length > 0) { %>
             <% reviews.forEach(review => { %>
                 <div class="review-card">
-                    <% if (review.bookInfo && review.bookInfo.thumbnail) { %>
-                        <img src="<%= review.bookInfo.thumbnail %>" alt="Book cover" />
-                    <% } %>
-                    
-                    <h3><%= review.title %></h3>
-                    <p><strong>Rating:</strong> <%= review.rating %> / 5</p>
-
-                    <% if (review.containsSpoiler) { %>
-                        <p class="spoiler-warning">⚠️ Contains Spoilers</p>
-                    <% } %>
-
-                    <p>"<%= review.reviewText %>"</p>
-
-                    <div class="review-actions">
-                        <button type="button" class="btn-edit" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#reviewModal"
-                                data-review-id="<%= review.reviewId %>"
-                                data-review-text="<%= review.reviewText %>"
-                                data-rating="<%= review.rating %>"
-                                data-spoiler="<%= review.containsSpoiler %>"
-                                data-title="<%= review.title %>">
-                            Edit
-                        </button>
-
-                        <form action="/review/delete" style="display:inline;">
-                            <input type="hidden" name="reviewId" value="<%= review.reviewId %>">
-                            <button type="submit" class="btn-delete">Delete</button>
-                        </form>
+                    <div>
+                        <% if (review.bookInfo && review.bookInfo.thumbnail) { %>
+                            <img src="<%= review.bookInfo.thumbnail %>" alt="Book cover" />
+                        <% } %>
                     </div>
-                    <hr><br>
+                    <div>
+                        <h3><%= review.title %></h3>
+
+                        <% if (review.bookInfo && review.bookInfo.authors) { %>
+                            <h4><%=review.bookInfo.authors.join(", ")%></h4>
+                        <% } %>
+
+                        <p><strong>Rating:</strong> <%= review.rating %> / 5</p>
+
+                        <% if (review.containsSpoiler) { %>
+                            <p class="spoiler-warning">⚠️ Contains Spoilers</p>
+                        <% } %>
+
+                        <p>"<%= review.reviewText %>"</p>
+
+                        <div class="review-actions">
+                            <button type="button" class="btn-edit" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#reviewModal"
+                                    data-review-id="<%= review.reviewId %>"
+                                    data-review-text="<%= review.reviewText %>"
+                                    data-rating="<%= review.rating %>"
+                                    data-spoiler="<%= review.containsSpoiler %>"
+                                    data-title="<%= review.title %>">
+                                Edit
+                            </button>
+
+                            <form action="/review/delete" style="display:inline;">
+                                <input type="hidden" name="reviewId" value="<%= review.reviewId %>">
+                                <button type="submit" class="btn-delete">Delete</button>
+                            </form>                       
+                        </div>
+                    </div>
+                    
                 </div>
+                <br><hr style="width: 100%;"><br>
             <% }); %>
         <% } else { %>
             <p>You haven't written any reviews yet!</p>
