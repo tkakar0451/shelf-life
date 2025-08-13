@@ -28,7 +28,6 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     waitForConnections: true,
 });
-const conn = await pool.getConnection();
 
 // functions
 function generateStarRating(rating) {
@@ -95,7 +94,7 @@ app.post('/signup', async (req, res) => {
                 FROM Users
                 WHERE username = ?`;
 
-    const [rows] = await conn.query(sql, [inputUsername]);
+    const [rows] = await pool.query(sql, [inputUsername]);
 
     if (rows.length > 0) {
         return res.render('signup', {
@@ -109,13 +108,13 @@ app.post('/signup', async (req, res) => {
             (username, password)
             VALUES (?, ?)`;
     let params = [inputUsername, inputPassword];
-    await conn.query(sql, params);
+    await pool.query(sql, params);
 
     sql = `SELECT *
             FROM Users
             WHERE username = ?`;
 
-    const [user] = await conn.query(sql, [inputUsername]);
+    const [user] = await pool.query(sql, [inputUsername]);
 
     req.session.user = user[0];
 
@@ -156,7 +155,7 @@ app.post('/login', async (req, res) => {
                 FROM Users
                 WHERE username = ? AND password = ?`;
 
-    const [rows] = await conn.query(sql, [inputUsername, inputPassword]);
+    const [rows] = await pool.query(sql, [inputUsername, inputPassword]);
 
     // return to main page after logging in
     // if not correct, stay at login page and stage the error
@@ -217,10 +216,10 @@ app.post('/api/addReview/:id', async (req, res) => {
 
     // check for book in DB to add
     let bookSQL = `SELECT * FROM Book WHERE bookId = ?`;
-    const [bookRows] = await conn.query(bookSQL, [bookId]);
+    const [bookRows] = await pool.query(bookSQL, [bookId]);
 
     if (bookRows.length === 0) {
-        const bookResult = await conn.query(
+        const bookResult = await pool.query(
             'INSERT INTO Book (bookId, title) VALUES (?, ?)',
             [bookId, bookTitle]
         );
@@ -233,7 +232,7 @@ app.post('/api/addReview/:id', async (req, res) => {
                 (userId, bookId, reviewText, rating, containsSpoiler)
                 VALUES (?, ?, ?, ?, ?)`;
     let params = [userId, bookId, review, ratingValue, isSpoiler];
-    const [rows] = await conn.query(sql, params);
+    const [rows] = await pool.query(sql, params);
     console.log(rows);
 
     res.redirect(`/books/${bookId}`);
@@ -259,7 +258,7 @@ app.get('/books/:id', async (req, res) => {
                 WHERE r.bookId = ?`;
     let params = [bookID];
 
-    let [reviewRows] = await conn.query(sql, params);
+    let [reviewRows] = await pool.query(sql, params);
     let bookDetail = data.volumeInfo;
     return res.render('bookDetails', {
         logIn: req.session.authenticated,
@@ -288,7 +287,7 @@ app.get('/user/profile', async (req, res) => {
                    JOIN Book ON Review.bookId = Book.bookId
                    WHERE Review.userId = ?`;
 
-    const [reviews] = await conn.query(sql, [loggedInUserId]);
+    const [reviews] = await pool.query(sql, [loggedInUserId]);
 
     // fetch additional book info from Google Books API for each review
     const reviewsWithBookInfo = await Promise.all(
@@ -337,7 +336,7 @@ app.post('/review/edit', async function (req, res) {
         req.body.reviewId,
     ];
 
-    await conn.query(sql, params);
+    await pool.query(sql, params);
     res.redirect('/user/profile');
 });
 
@@ -352,7 +351,7 @@ app.get('/review/delete', async (req, res) => {
     let sql = `DELETE FROM Review 
                 WHERE reviewId = ?`;
 
-    await conn.query(sql, [reviewId]);
+    await pool.query(sql, [reviewId]);
 
     res.redirect('/user/profile');
 });
@@ -363,7 +362,7 @@ app.get('/dbTest', async (req, res) => {
                 JOIN Review ON Users.userId = Review.userId
                 JOIN Book ON Review.bookId = Book.bookId
                 WHERE title LIKE '%Harry%'`;
-    const [rows] = await conn.query(sql);
+    const [rows] = await pool.query(sql);
     res.send(rows);
 }); //dbTest
 
