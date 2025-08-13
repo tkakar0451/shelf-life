@@ -87,7 +87,9 @@
     </div>
     
   <!-- Add Review Modal (your teammate’s file, kept under views/) -->
-  <%- include('partials/addReview') %>
+  <form method="POST" action="/api/addReview/<%= bookId %>">
+        <%- include('partials/addReview') %>
+  </form>
 
   <!-- Login required prompt -->
   <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel" aria-hidden="true">
