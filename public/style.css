@@ -60,6 +60,28 @@ header {
   text-decoration: underline;
 }
 
+/* === Header nav spacing + CTA === */
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;           /* gives each link its own hit area */
+  border-radius: 10px;
+  margin-left: 10px;           /* reduces the big 2rem gap if needed */
+}
+
+.nav-links .btn-cta {
+  background: var(--light-brown);
+  color: #fff;
+}
+
+.nav-links .btn-cta:hover {
+  background: var(--dark-brown);
+  color: #fff;
+}
+
+.welcome { color: var(--dark-brown); margin-right: 6px; }
+
+
 /* ========== HERO SECTION ========== */
 .hero-banner {
   text-align: center;
@@ -125,24 +147,25 @@ header {
 .card {
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 4px 12px var(--card-shadow);
+  box-shadow: 0 4px 10px var(--card-shadow);
   width: 220px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
 }
 
 .card img {
   width: 100%;
-  height: 280px;
+  height: 240px;
   object-fit: contain;
-  image-rendering: auto;
-  background-color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card-title {
@@ -280,32 +303,46 @@ footer p {
   justify-content: center;
 }
 
-/* ========== UPDATED CARD STYLE FOR GRID LAYOUT ========== */
-.card {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px var(--card-shadow);
-  width: 220px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  transition: transform 0.2s;
+/* === Modal Star Rating (clickable) === */
+.rating { 
+  display: inline-flex; 
+  gap: 6px; 
+  direction: rtl;           /* fill left-to-right visually */
+  unicode-bidi: bidi-override;
+}
+.rating input { display: none; }
+.rating label { 
+  font-size: 1.4rem; 
+  color: #cbb7a6; 
+  cursor: pointer; 
+  line-height: 1;
+}
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+  color: #e0a14a;
 }
 
-.card img {
-  width: 100%;
-  height: 240px;
-  object-fit: contain;
-  margin-bottom: 0.5rem;
+/* === Add Review Modal Theme === */
+.modal-content { 
+  border: 1px solid #ead9c9; 
+  border-radius: 16px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+}
+.modal-header { 
+  background: #fff8f1; 
+  border-bottom: 1px solid #ead9c9; 
+}
+.modal-footer { 
+  border-top: 1px solid #ead9c9; 
 }
 
-/* ========== User Review Card ========== */
-.review-card {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
+/* === Toast === */
+.toast{
+  position: fixed; right: 20px; bottom: -60px; opacity: 0; transition: .4s all;
+  background: var(--dark-brown); color: #fff; padding: 12px 16px;
+  border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.12); z-index: 9999;
 }
-
+.toast.success{ background: #6aa571; }
+.toast.error{ background: #c46060; }
+.toast.show{ bottom: 20px; opacity: 1; }
