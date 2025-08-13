@@ -1,0 +1,61 @@
+<!--  
+  File: views/addReview.ejs  
+  Authors: Yui Nguyen, Yusra Ashar  
+  Description: Modal for adding a new book review with star rating, spoiler option, and styled to match the Shelf Life theme.  
+-->
+
+<!-- Add Review Modal (partial) -->
+<div class="modal fade" id="addReviewModal" tabindex="-1" aria-labelledby="addReviewLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+  
+        <form id="addReviewForm" method="POST" action="/addReview">
+          <!-- If backend endpoint is /api/reviews, change the action above -->
+  
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addReviewLabel">Add New Review</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+  
+          <div class="modal-body">
+            <!-- Book Info (filled by JS before opening) -->
+            <p class="mb-1 text-muted small">Book</p>
+            <div id="modalTitle" class="fw-semibold mb-3">Loading…</div>
+  
+            <!-- Hidden fields sent with POST -->
+            <input type="hidden" id="hiddenBookId"    name="bookId"    value="">
+            <input type="hidden" id="hiddenBookTitle" name="bookTitle" value="">
+            <input type="hidden" id="hiddenThumb"     name="thumbnail" value="">
+  
+            <!-- Rating -->
+            <div class="mb-3">
+              <label class="form-label d-block mb-1">Rating</label>
+              <fieldset class="rating" aria-label="Star rating">
+                <% for (let i = 5; i >= 1; i--) { %>
+                  <input type="radio" id="star-<%= i %>" name="rating" value="<%= i %>" <%= i === 5 ? 'required' : '' %> />
+                  <label for="star-<%= i %>" title="<%= i %> star<%= i>1?'s':'' %>">★</label>
+                <% } %>
+              </fieldset>
+            </div>
+  
+            <!-- Review text -->
+            <div class="mb-3">
+              <label for="reviewField" class="form-label">Your Review</label>
+              <textarea id="reviewField" name="reviewText" class="form-control" rows="5" required></textarea>
+            </div>
+  
+            <!-- Spoiler -->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="spoilerCheckbox" name="containsSpoilers" value="1">
+              <label class="form-check-label" for="spoilerCheckbox">Contains spoilers</label>
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-secondary">Add Review</button>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>
