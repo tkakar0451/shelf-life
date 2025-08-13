@@ -339,10 +339,248 @@ footer p {
 
 /* === Toast === */
 .toast{
-  position: fixed; right: 20px; bottom: -60px; opacity: 0; transition: .4s all;
-  background: var(--dark-brown); color: #fff; padding: 12px 16px;
-  border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.12); z-index: 9999;
+  position: fixed; 
+  right: 20px;
+   bottom: -60px; 
+   opacity: 0; 
+   transition: .4s all;
+  background: var(--dark-brown); 
+  color: #fff; 
+  padding: 12px 16px;
+  border-radius: 12px; 
+  box-shadow: 0 6px 20px rgba(0,0,0,.12); 
+  z-index: 9999;
 }
-.toast.success{ background: #6aa571; }
-.toast.error{ background: #c46060; }
-.toast.show{ bottom: 20px; opacity: 1; }
+.toast.success{ 
+  background: #6aa571; 
+}
+.toast.error{ 
+  background: #c46060; 
+}
+.toast.show{ 
+  bottom: 20px; opacity: 1; 
+}
+
+/* === Reviews Section === */
+.reviews-section { margin-top: 2rem; }
+.reviews-title {
+  font-size: 1.4rem;
+  color: var(--dark-brown);
+  margin-bottom: .75rem;
+}
+
+/* grid */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+/* card */
+.review-card {
+  background: #fff;
+  border: 1px solid #ead9c9;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px var(--card-shadow);
+  padding: 14px 16px;
+}
+
+/* header (name + stars) */
+.review-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .5rem;
+}
+
+.review-user {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.review-stars {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  letter-spacing: 1px;
+  color: #e0a14a; /* star color */
+  font-weight: 600;
+}
+
+/* spoiler tag */
+.spoiler-badge {
+  display: inline-block;
+  background: #fff1c7;
+  color: #7a5a00;
+  border: 1px solid #f0d78a;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: .8rem;
+  margin-bottom: .5rem;
+}
+
+/* body text */
+.review-text {
+  color: var(--text-dark);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+/* subtle hover */
+.review-card:hover {
+  transform: translateY(-2px);
+  transition: transform .15s ease;
+}
+
+
+.reviews-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.testimonial-card {
+  background: #fff8f0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #e6d3c0;
+}
+
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.testimonial-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.testimonial-name {
+  font-weight: bold;
+  margin: 0;
+}
+
+.testimonial-stars {
+  font-size: 1.2rem;
+  color: #b57f50;
+}
+
+.testimonial-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.spoiler-badge {
+  display: inline-block;
+  background: #e0b0a2;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+
+.book-cover {
+  width: 250px;   /* increase from default */
+  height: auto;   /* keep aspect ratio */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* === Profile Page polish === */
+.page-title { color: var(--dark-brown); }
+
+/* Profile review cards */
+.review-card {
+  display: flex;
+  align-items: flex-start;
+  background-color: #f7efe9; /* matches your site theme */
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  width: fit-content; /* wraps content size */
+}
+
+.review-card img {
+  width: 120px; /* bigger image */
+  height: auto;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.review-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-text h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #5c3d2e;
+}
+
+.review-text h4 {
+  margin: 2px 0 8px 0;
+  font-size: 14px;
+  color: #7a5c4d;
+}
+
+.review-text p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #4a3b31;
+}
+
+.review-actions {
+  margin-top: 8px;
+}
+
+.review-actions button {
+  background-color: #a47148;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.review-actions button.delete {
+  background-color: #c94f4f;
+}
+
+.review-actions button:hover {
+  opacity: 0.9;
+}
+
+
+/* Profile Page Button Styles */
+.btn-edit {
+  background-color: #f4e4d4;   /* light cream */
+  color: #5b3a29;              /* dark brown text */
+  border: 1px solid #5b3a29;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-edit:hover {
+  background-color: #e8d3c0;   /* slightly darker cream */
+}
+
+.btn-delete {
+  background-color: #5b3a29;   /* dark brown */
+  color: #ffffff;              /* light text */
+  border: 1px solid #5b3a29;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-delete:hover {
+  background-color: #4a2f21;   /* slightly darker brown */
+}
