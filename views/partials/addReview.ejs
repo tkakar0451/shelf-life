@@ -9,8 +9,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
   
-        <form id="addReviewForm" method="POST" action="/addReview">
-          <!-- If backend endpoint is /api/reviews, change the action above -->
+        <form id="addReviewForm" method="POST" action="/api/addReview/<%= bookId %>">          <!-- If backend endpoint is /api/reviews, change the action above -->
   
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="addReviewLabel">Add New Review</h1>
@@ -41,8 +40,7 @@
             <!-- Review text -->
             <div class="mb-3">
               <label for="reviewField" class="form-label">Your Review</label>
-              <textarea id="reviewField" name="reviewText" class="form-control" rows="5" required></textarea>
-            </div>
+              <textarea id="reviewField" name="review" class="form-control" rows="5" required></textarea>            </div>
   
             <!-- Spoiler -->
             <div class="form-check">
